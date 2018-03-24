@@ -9,6 +9,9 @@ from django.utils import timezone
 
 # Create your views here.
 
+def home(request):
+    pass
+
 
 def driver_view(request,id):
     ids = [1,2,3,4,5]
@@ -59,8 +62,6 @@ def driver_view(request,id):
             }
             context['Complete'].append(d)
 
-
-
         return render(request, context=context, template_name="driver.html")
 
     return render(request, "driver.html", {'message': 'Driver Not Found'})
@@ -89,13 +90,31 @@ def customer_view(request):
 
 
 
+
 def dashboard_view(request):
-    pass
+    reqs = pickup_req.objects.all()
+    objects = []
+    for i in reqs:
+        d = {
+            'req_id': i.req_id,
+            'customer_id': i.customer.customer_id,
+            'time_elapsed': str(int((timezone.now() - i.created_at).total_seconds() / 60)) + ' mins ' + str(int((timezone.now() - i.created_at).total_seconds() % 60)) + ' seconds'
+        }
 
+        if i.driver:
+            d['driver_id'] = i.driver.driver_id
+        else:
+            d['driver_id'] = 'None'
 
+        if i.status == 'W':
+            d['status'] = 'Waiting'
+        elif i.status == 'O':
+            d['status'] ='Ongoing'
+        else:
+            d['status'] = 'Completed'
+        objects.append(d)
 
-def create_req(request):
-    pass
+    return render(request, "dashboard.html", {'reqs': objects})
 
 
 
