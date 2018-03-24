@@ -22,7 +22,7 @@ class pickup_req(models.Model):
     accepted_at = models.DateTimeField(null=True, blank=True)
 
     customer = models.ForeignKey(to=customer,on_delete=models.DO_NOTHING,)
-    driver = models.ForeignKey(to=driver,on_delete=models.DO_NOTHING,)
+    driver = models.ForeignKey(to=driver,on_delete=models.DO_NOTHING,null=True)
 
     STATUS_TYPES = (
         ('W', 'Waiting'),
