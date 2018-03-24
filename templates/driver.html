@@ -5,63 +5,79 @@
 
 {% block body %}
 
-<div class="container">
     <div class="row">
-        <div class="col s12 m8 offset-m2">
-            <h4>Waiting :</h4>
-            {% for ride in Waiting %}
-                <div class="card">
-                    <div class="card-content">
-                        <span class="card-title grey-text text-darken-4">Req. Id: {{ ride.req_id }} | Cust. Id: {{ ride.customer_id }}</span>
-                        <p><strong>{{ ride.time_elapsed }} mins ago </strong></p>
-                    </div>
-                    <div class="card-action">
-                        <form action="{% url 'pick_req' %}" method="post">
-                            {% csrf_token %}
-                            <input type="hidden" name="req_id" value="{{ ride.req_id}}">
-                            <input type="hidden" name="driver_id" value="{{ driver_id }}">
-                            <button class="btn waves-effect waves-light" type="submit" style="float: right;margin-bottom: 10px;margin-right: 10px;">Select
-                                <i class="material-icons right">send</i>
-                            </button>
-                        </form>
-                    </div>
-                </div>
-            {% empty %}
-                <li>Sorry, no Rides available.</li>
-            {% endfor %}
-
-
-
-            <h4>Ongoing : </h4>
-            {% for ride in Ongoing %}
-                <div class="card">
-                    <div class="card-content">
-                        <span class="card-title grey-text text-darken-4">Req. Id: {{ ride.req_id }} | Cust. Id: {{ ride.customer_id }}</span>
-                        <p><strong>Request : {{ ride.requested }} mins ago </strong></p>
-                        <p><strong>PickedUp : {{ ride.pickedup }} mins ago </strong></p>
-                    </div>
-                </div>
-            {% empty %}
-                <li>Sorry, no Ongoing Rides</li>
-            {% endfor %}
-
-
-            <h4>Completed: </h4>
-            {% for ride in Complete %}
-                <div class="card">
-                    <div class="card-content">
-                        <span class="card-title grey-text text-darken-4">Req. Id: {{ ride.req_id }} | Cust. Id: {{ ride.customer_id }}</span>
-                        <p><strong>Request : {{ ride.requested }} mins ago </strong></p>
-                        <p><strong>PickedUp : {{ ride.pickedup }} mins ago </strong></p>
-                        <p><strong>Complete: {{ ride.completed }} mins ago </strong></p>
-                    </div>
-                </div>
-            {% empty %}
-                <li>Sorry, no Ongoing Rides</li>
-            {% endfor %}
-
+        <h4 class="center-align" style="font-weight: 300">Driver App - Driver id {{ driver_id }}</h4>
+        <div class="col s12 ">
+            <ul class="tabs tab-demo z-depth-1">
+                <li class="tab col s4 ">
+                    <a class="red-text active" href="#Waiting">Waiting</a></li>
+                <li class="tab col s4 ">
+                    <a class="red-text " href="#Ongoing">Ongoing</a></li>
+                <li class="tab col s4 ">
+                    <a class="red-text " href="#Completed">Completed</a></li>
+                <div class="indicator red accent-2" style="z-index:1"></div>
+            </ul>
         </div>
-      </div>
+
+        <div class="container">
+            <div id ="Waiting" class="col s12 m8 offset-m2" style="margin-top: 20px;">
+                {% for ride in Waiting %}
+                    <div class="card hoverable">
+                        <div class="card-content">
+                            <span class="card-title grey-text text-darken-4">Req. Id: {{ ride.req_id }} | Cust. Id: {{ ride.customer_id }}</span>
+                            <p class="center-align"><strong>{{ ride.time_elapsed }} mins ago </strong></p>
+                        </div>
+                        <div class="card-action" style="margin-top: -10px;">
+                            <form action="{% url 'pick_req' %}" method="post">
+                                {% csrf_token %}
+                                <input type="hidden" name="req_id" value="{{ ride.req_id}}">
+                                <input type="hidden" name="driver_id" value="{{ driver_id }}">
+                                <button class="btn waves-effect waves-light" type="submit" style="float: right;margin-top:-15px;margin-bottom: 5px;margin-right: 10px;">Select
+                                    <i class="material-icons right">send</i>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                {% empty %}
+                    <h2 class="center-align" style="font-weight: 200">Sorry, no Rides available.</h2>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="container">
+            <div id ="Ongoing" class="col s12 m8 offset-m2" style="margin-top: 20px;">
+                {% for ride in Ongoing %}
+                    <div class="card hoverable">
+                        <div class="card-content">
+                            <span class="card-title grey-text text-darken-4">Req. Id: {{ ride.req_id }} | Cust. Id: {{ ride.customer_id }}</span>
+                            <p class="center-align"><strong>Request : {{ ride.requested }} mins ago </strong></p>
+                            <p class="center-align"><strong>PickedUp : {{ ride.pickedup }} mins ago </strong></p>
+                        </div>
+                    </div>
+                {% empty %}
+                    <h2 class="center-align" style="font-weight: 250">Sorry, no Ongoing Rides</h2>
+                {% endfor %}
+            </div>
+        </div>
+
+
+        <div class="container">
+            <div id ="Completed" class="col s12 m8 offset-m2" style="margin-top: 20px;">
+                {% for ride in Complete %}
+                    <div class="card hoverable">
+                        <div class="card-content">
+                            <span class="card-title grey-text text-darken-4">Req. Id: {{ ride.req_id }} | Cust. Id: {{ ride.customer_id }}</span>
+                            <p class="center-align"><strong>Request : {{ ride.requested }} mins ago </strong></p>
+                            <p class="center-align"><strong>PickedUp : {{ ride.pickedup }} mins ago </strong></p>
+                            <p class="center-align"><strong>Complete: {{ ride.completed }} mins ago </strong></p>
+                        </div>
+                    </div>
+                {% empty %}
+                    <h2 class="center-align" style="font-weight: 250">Sorry, no Completed Rides</h2>
+                {% endfor %}
+            </div>
+        </div>
 
     </div>
+
 {% endblock body %}

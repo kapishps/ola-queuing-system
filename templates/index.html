@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% block header %}
+    {% include 'header.html' %}
+{% endblock %}}
+
+{% block body %}
+
+    <div class="row">
+        <h4 class="center-align" style="font-weight: 300">Choose View/Role</h4>
+
+        <div class="container">
+            <div class="col s12 m8 offset-m2 center-align" style="margin-top: 20px;">
+                <a href="customer/" class="waves-effect waves-light btn-large"><i class="material-icons right">person</i>Customer</a>
+                <a href="driver/1"class="waves-effect waves-light btn-large"><i class="material-icons right">local_taxi</i>Driver</a>
+                <a href="dashboard/"class="waves-effect waves-light btn-large"><i class="material-icons right">desktop_mac</i>Dashboard</a>
+            </div>
+        </div>
+
+
+    </div>
+
+{% endblock body %}
