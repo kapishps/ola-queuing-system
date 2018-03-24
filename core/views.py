@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.http import HttpResponseRedirect
 
 from core.forms import userinput
 from core.models import customer,driver,pickup_req
@@ -9,12 +10,12 @@ from django.utils import timezone
 # Create your views here.
 
 
-def driver_view(request):
-    ids = ['1','2','3','4','5']
-    if request.GET.get('id') in ids:
+def driver_view(request,id):
+    ids = [1,2,3,4,5]
+    if id in ids:
         context = {}
-        context['driver_id'] = request.GET.get('id')
-        curr_driver = driver.objects.get(pk=request.GET.get('id'))
+        context['driver_id'] = id
+        curr_driver = driver.objects.get(pk=id)
 
         # print(curr_driver)
         waiting = pickup_req.objects.filter(status='W')
@@ -29,6 +30,7 @@ def driver_view(request):
 
 
         ongoing = pickup_req.objects.filter(status='O',driver=curr_driver)
+        # print(ongoing)
         context['Ongoing'] = []
         for i in ongoing:
             d ={
@@ -45,6 +47,7 @@ def driver_view(request):
 
 
         completed = pickup_req.objects.filter(status='C',driver=curr_driver)
+        # print(completed)
         context['Complete'] = []
         for i in completed:
             d = {
@@ -84,11 +87,31 @@ def customer_view(request):
 
     return render(request, "customer.html", {'form': userinput})
 
+
+
 def dashboard_view(request):
     pass
+
+
 
 def create_req(request):
     pass
 
+
+
 def pick_req(request):
-    pass
+    req_id = request.POST['req_id']
+    driver_id = request.POST['driver_id']
+
+    req = pickup_req.objects.get(pk=req_id)
+    curr_driver = driver.objects.get(pk=driver_id)
+
+    ongoing = pickup_req.objects.filter(status='O', driver=curr_driver)
+
+    if ongoing.count() == 0:
+        req.driver = curr_driver
+        req.status = 'O'
+        req.accepted_at = timezone.now()
+        req.save()
+
+    return HttpResponseRedirect(curr_driver.get_absolute_url())

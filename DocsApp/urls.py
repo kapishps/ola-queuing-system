@@ -19,7 +19,7 @@ from core.views import driver_view,customer_view,dashboard_view,create_req,pick_
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('driver/', driver_view, name='driver'),
+    path('driver/<int:id>', driver_view, name='driver'),
     path('customer/', customer_view, name='customer'),
     path('dashboard/', dashboard_view, name='dashboard'),
     path('create_req/', create_req, name='create_req'),
