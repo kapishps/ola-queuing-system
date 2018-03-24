@@ -15,13 +15,13 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from core.views import driver,customer,dashboard,create_req,pick_req
+from core.views import driver_view,customer_view,dashboard_view,create_req,pick_req
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('driver/<int:id>', driver, name='driver'),
-    path('customer/', customer, name='customer'),
-    path('dashboard/', dashboard, name='dashboard'),
+    path('driver/<int:id>', driver_view, name='driver'),
+    path('customer/', customer_view, name='customer'),
+    path('dashboard/', dashboard_view, name='dashboard'),
     path('create_req/', create_req, name='create_req'),
     path('pick_req/', pick_req, name='pick_req'),
 ]
