@@ -7,6 +7,9 @@
 
     <div class="row">
         <h4 class="center-align" style="font-weight: 300">Driver App - Driver id {{ driver_id }}</h4>
+    <div class="col s12 center-align">
+    <a href="{{ refresh_url }}" class="waves-effect waves-light btn center-align"><i class="material-icons right">refresh</i>Refresh</a>
+    </div>
         <div class="col s12 ">
             <ul class="tabs tab-demo z-depth-1">
                 <li class="tab col s4 ">
@@ -24,7 +27,7 @@
                 {% for ride in Waiting %}
                     <div class="card hoverable">
                         <div class="card-content">
-                            <span class="card-title grey-text text-darken-4">Req. Id: {{ ride.req_id }} | Cust. Id: {{ ride.customer_id }}</span>
+                            <span class="card-title grey-text text-darken-4 ">Req. Id: {{ ride.req_id }} | Cust. Id: {{ ride.customer_id }}</span>
                             <p class="center-align"><strong>{{ ride.time_elapsed }} mins ago </strong></p>
                         </div>
                         <div class="card-action" style="margin-top: -10px;">
@@ -32,7 +35,7 @@
                                 {% csrf_token %}
                                 <input type="hidden" name="req_id" value="{{ ride.req_id}}">
                                 <input type="hidden" name="driver_id" value="{{ driver_id }}">
-                                <button class="btn waves-effect waves-light" type="submit" style="float: right;margin-top:-15px;margin-bottom: 5px;margin-right: 10px;">Select
+                                <button class="btn waves-effect waves-light disabled" type="submit" style="float: right;margin-top:-15px;margin-bottom: 5px;margin-right: 10px;">Select
                                     <i class="material-icons right">send</i>
                                 </button>
                             </form>

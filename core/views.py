@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponseRedirect
+from django.urls import reverse
 
 from core.forms import userinput
 from core.models import customer,driver,pickup_req
@@ -19,6 +20,8 @@ def driver_view(request,id):
         context = {}
         context['driver_id'] = id
         curr_driver = driver.objects.get(pk=id)
+
+        context['refresh_url'] = curr_driver.get_absolute_url()
 
         # print(curr_driver)
         waiting = pickup_req.objects.filter(status='W')
@@ -103,6 +106,8 @@ def dashboard_view(request):
 
         if i.driver:
             d['driver_id'] = i.driver.driver_id
+            if i.status == 'O' and int((timezone.now() - i.accepted_at).total_seconds() / 60) >=5:
+                i.status = 'C'
         else:
             d['driver_id'] = 'None'
 
@@ -127,10 +132,11 @@ def pick_req(request):
 
     ongoing = pickup_req.objects.filter(status='O', driver=curr_driver)
 
-    if ongoing.count() == 0:
+    if ongoing.count() == 0 and req.status == 'W':
         req.driver = curr_driver
         req.status = 'O'
         req.accepted_at = timezone.now()
         req.save()
+
 
     return HttpResponseRedirect(curr_driver.get_absolute_url())
