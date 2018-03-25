@@ -32,7 +32,7 @@
                             <p class="center-align"><strong>{{ ride.time_elapsed }} mins ago </strong></p>
                         </div>
                         <div class="card-action" style="margin-top: -10px;">
-                            <form action="{% url 'pick_req' %}" method="post">
+                            <form id="pick-req" action="{% url 'pick_req' %}" method="post">
                                 {% csrf_token %}
                                 <input type="hidden" name="req_id" value="{{ ride.req_id}}">
                                 <input type="hidden" name="driver_id" value="{{ driver_id }}">
@@ -83,10 +83,35 @@
         </div>
 
     </div>
+        <script type="text/JavaScript">
+            $(document).on("submit", "#pick-req", function(e) {
+                e.preventDefault();
+                var frm = $(this).closest('form');
+                $.ajax({
+                    type : frm.attr('method'),
+                    url : frm.attr('action'),
+                    data: frm.serialize(),
+                    dataType: 'json',
+                    success: function (data) {
+                        console.log("success");
+                        if (data.status == 'success') {
+                            Materialize.toast('Success : Pickup Request Accepted', 3000);
+                        }
+                        if (data.status == 'error1') {
+                            Materialize.toast('Error : You already have an Ongoing Ride', 3000);
+                        }
+                        if (data.status == 'error2') {
+                            Materialize.toast('Error : Request No Longer Available', 3000);
+                        }
+                    }
+                });
+            });
+        </script>
     {% else %}
         <div class="row" style="margin-top: 100px">
         <h4 class="center-align" style="font-weight: 300">{{ error }}</h4>
         </div>
     {% endif %}
+
 
 {% endblock body %}

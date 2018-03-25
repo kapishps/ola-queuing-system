@@ -138,11 +138,18 @@ def pick_req(request):
 
     ongoing = pickup_req.objects.filter(status='O', driver=curr_driver)
 
+    resp = {}
+
+    resp['status'] = 'error1'
+
+    if req.status == 'O' or req.status == 'C':
+        resp['status'] = 'error2'
+
     if ongoing.count() == 0 and req.status == 'W':
         req.driver = curr_driver
         req.status = 'O'
         req.accepted_at = timezone.now()
         req.save()
+        resp['status'] = 'success'
 
-
-    return HttpResponseRedirect(curr_driver.get_absolute_url())
+    return HttpResponse(json.dumps(resp), content_type='application/json')
