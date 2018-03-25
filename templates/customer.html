@@ -5,22 +5,42 @@
 
 {% block body %}
 
-<div class="container">
-    <div class="row">
-        <div class="col s6 offset-s3 z-depth-1" id="panell" style="margin-top: 60px;padding: 0px;">
-            <h5 id="title" style="background-color: #009688;color: white;padding: 8px;margin-top: 0px">Enter Customer Id</h5>
-            <form method="post" action="{% url 'customer' %}" style="padding:0px;border-radius: 3px;box-sizing: border-box;">
-                {% csrf_token %}
-
-                {{ form }}
-            <button class="btn waves-effect waves-light" type="submit" style="float: right;margin-bottom: 10px;margin-right: 10px;">Ride Now
-                    <i class="material-icons right">send</i>
-            </button>
-            </form>
-            <br>
-            {{ message }}
+    <div class="container">
+        <div class="row">
+            <div class="col s6 offset-s3 z-depth-1" id="panell" style="margin-top: 60px;padding: 0px;">
+                <h5 id="title" style="background-color: #009688;color: white;padding: 8px;margin-top: 0px">Enter Customer Id</h5>
+                <form id="ride-now" method="post" action="{% url 'create_req' %}" style="padding:0px;border-radius: 3px;box-sizing: border-box;">
+                    {% csrf_token %}
+                    {{ form }}
+                    <button class="btn waves-effect waves-light" type="submit" style="float: right;margin-bottom: 10px;margin-right: 10px;">Ride Now
+                        <i class="material-icons right">send</i>
+                    </button>
+                </form>
+                <br>
+                {{ message }}
+            </div>
         </div>
-      </div>
 
     </div>
+
+    <script type="text/JavaScript">
+        var frm = $('#ride-now');
+        $(document).on("submit", "#ride-now", function(e) {
+            e.preventDefault();
+
+            $.ajax({
+                type : frm.attr('method'),
+                url : frm.attr('action'),
+                data: frm.serialize(),
+                dataType: 'json',
+                success: function (data) {
+                    console.log("success");
+                    if (data.status == 'success') {
+                        Materialize.toast('Ride request successfully placed', 3000);
+                    }
+                    document.getElementById("ride-now").reset();
+                }
+            });
+        });
+    </script>
 {% endblock body %}

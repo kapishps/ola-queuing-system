@@ -1,11 +1,11 @@
 from django.shortcuts import render
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect,HttpResponse
 from django.urls import reverse
 
 from core.forms import userinput
 from core.models import customer,driver,pickup_req
 
-import datetime
+import datetime,json
 from django.utils import timezone
 
 # Create your views here.
@@ -67,12 +67,17 @@ def driver_view(request,id):
 
         return render(request, context=context, template_name="driver.html")
 
-    return render(request, "driver.html", {'message': 'Driver Not Found'})
+    return render(request, "driver.html", {'error': 'Driver Not Found'})
 
 
 
 def customer_view(request):
+    return render(request, "customer.html", {'form': userinput})
+
+
+def create_req(request):
     input_id = userinput(request.POST or None)
+    resp = {}
     if request.POST and input_id.is_valid():
         cust_id = input_id.cleaned_data['q']
         # print(cust_id)
@@ -84,13 +89,14 @@ def customer_view(request):
         else:
             rider = rider[:1].get()
 
-        new_ride = pickup_req(customer=rider,status='W')
+        new_ride = pickup_req(customer=rider, status='W')
         new_ride.save()
 
-        return render(request, "customer.html", {'form': userinput, 'message': 'Pick up Request Placed Successfully'})
+        resp['status'] = 'success'
+        return HttpResponse(json.dumps(resp), content_type='application/json')
 
-    return render(request, "customer.html", {'form': userinput})
-
+    resp['status'] = 'error'
+    return HttpResponse(json.dumps(resp), content_type='application/json')
 
 
 
